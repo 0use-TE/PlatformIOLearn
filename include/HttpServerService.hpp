@@ -7,24 +7,12 @@
 class HttpServerService {
 private:
     AsyncWebServer server;
-    const char* ssid;
-    const char* password;
 
 public:
-    HttpServerService(const char* ssid, const char* password)
-        : server(80), ssid(ssid), password(password) {}
+    HttpServerService(const int port=80)
+        : server(port) {}
 
-    void init() {
-
-        Serial.println("Mounting LittleFS...");
-        if (!LittleFS.begin(true)) {
-            Serial.println("LittleFS Mount Failed!");
-            return;
-        }
-        listFiles();
-
-        Serial.printf("Connecting to WiFi: %s\n", ssid);
-        WiFi.begin(ssid, password);
+    bool init() {
         while (WiFi.status() != WL_CONNECTED) {
             delay(1000);
             Serial.print(".");
@@ -46,21 +34,5 @@ public:
 
         server.begin();
         Serial.println("Web server started.");
-    }
-
-private:
-    void listFiles() {
-        Serial.println("Listing files:");
-        File root = LittleFS.open("/");
-        if (!root) {
-            Serial.println("Failed to open root directory!");
-            return;
-        }
-        File file = root.openNextFile();
-        while (file) {
-            Serial.printf("File: %s, Size: %lu bytes\n", file.name(), file.size());
-            file = root.openNextFile();
-        }
-        root.close();
     }
 };

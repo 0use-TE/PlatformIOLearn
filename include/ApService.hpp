@@ -10,7 +10,7 @@ private:
     IPAddress localIP = IPAddress(192, 168, 4, 1); // ESP32 默认AP IP
 
 public:
-    ApService(const char* ssid, const char* password)
+    ApService(const String ssid, const String password)
         : ssid(ssid), password(password) {}
 
     bool begin() {
